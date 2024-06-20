@@ -1,6 +1,5 @@
 from langchain import OpenAI, LLMChain, PromptTemplate, Memory
 
-# Initialize OpenAI with your API key
 openai_api_key = ''
 openai_llm = OpenAI(api_key=openai_api_key)
 
@@ -26,27 +25,19 @@ questions = [
     ("detailed", "What is the boiling point of water?")
 ]
 
+def fetch_external_data(question):
+    external_data = "External data related to the question."
+    return external_data
+
 answers = []
 for q_type, question in questions:
     if q_type == "general":
         answer = general_qa_chain.run(context=context, question=question)
     elif q_type == "detailed":
-        answer = detailed_qa_chain.run(context=context, question=question)
-    answers.append(answer)
-
-for (q_type, question), answer in zip(questions, answers):
-    print(f"Q: {question}\nA: {answer}")
-
-def fetch_external_data(question):
-    external_data = "External data related to the question."
-    return external_data
-
-for q_type, question in questions:
-    if q_type == "detailed":
         external_data = fetch_external_data(question)
         context_with_external_data = f"{context}\nAdditional Information: {external_data}"
         answer = detailed_qa_chain.run(context=context_with_external_data, question=question)
-        answers.append(answer)
+    answers.append(answer)
 
 for (q_type, question), answer in zip(questions, answers):
     print(f"Q: {question}\nA: {answer}")
